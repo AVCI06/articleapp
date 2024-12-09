@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Detay Sayfası
+{% endblock title %}
+
+{% block body %}
+<div class="col-lg-8">
+    <!-- Post content-->
+    <article>
+        <!-- Post header-->
+        <header class="mb-4">
+            <!-- Post title-->
+            <h1 class="fw-bolder mb-1">{{ article.title }}</h1>
+            <!-- Post meta content-->
+            <div class="text-muted fst-italic mb-2">Posted on {{ article.created_date }}</div>
+            <!--div class="text-muted fst-italic mb-2">by {{ article.author }}</div-->
+            <!-- Post categories-->
+            <a class="badge bg-secondary text-decoration-none link-dark" href="#!">by</a>
+            <a class="badge bg-secondary text-decoration-none link-light" href="#!">{{ article.author }}</a>
+        </header>
+        <!-- Preview image figure-->
+        {% if article.article_image %}
+        <figure class="mb-4"><img class="img-fluid rounded" src="{{ article.article_image.url }}" alt=""></figure>
+        {% endif %}
+        <!-- Post content-->
+        <section class="mb-5">
+            <p class="fs-5 mb-4">{{ article.content|safe }}</p>
+            
+        </section>
+    </article>
+    
+    <!--comment-->
+    <section class="mb-5">
+        <div class="card bg-light">
+            <div class="card-body">
+                
+                {% if yorumlar %}
+                {% for yorum in yorumlar %}
+                <div class="d-flex mb-4">
+                    <!-- Parent comment-->
+                    <div class="flex-shrink-0"><img style="width:50px;height:50px" class="rounded-circle" src="https://www.noktalamaisaretleri.gen.tr/images/soru-isareti(1).jpg" alt="..."></div>
+                    <div class="ms-3">
+                        <div class="fw-bold"><small>{{ yorum.comment_author }}</small></div>
+                        <div class="fw-bold"><small>{{ yorum.comment_date }}</small></div>
+                        {{ yorum.comment_content}} 
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="alert alert-warning">Bu Makaleye Henüz Yorum Yapılmamış. İlk Yorum Yapan Siz Olmak İster misiniz?</div>
+                {% endif %}
+                <!-- Comment form-->
+                <form class="mb-4" action="{% url 'comment' article.id %}" method="post">
+                    {% csrf_token %}
+                    <input name="comment_author" type="text" class="form-control" placeholder="İsminiz :">
+                    <textarea name="comment_content" class="form-control mt-2" rows="3" placeholder="Yorum Yaptığınız İçin Teşekkür Ederiz..."></textarea>
+                    <button type="submit" class="btn btn-danger mb-3 mt-2">Yorum Ekle</button>
+                </form> 
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock body %}
